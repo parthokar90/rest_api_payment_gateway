@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
+use App\Http\Requests\UserCreateRequest;
+use App\Http\Requests\UserUpdateRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -44,33 +46,14 @@ class UserController extends Controller
         return response()->json($payload, Response::HTTP_OK);
     }
 
-    public function store(Request $request)
+    public function store(UserCreateRequest $request)
     {
 
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email',
-            'date_of_birth' => 'required|date',
-            'password' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return response(
-                [
-                    'status' => Response::HTTP_UNPROCESSABLE_ENTITY,
-                    'app_message' => 'Validation errors',
-                    'user_message' => 'Validation errors',
-                    'errors' => $validator->errors(),
-                ],
-                Response::HTTP_UNPROCESSABLE_ENTITY
-            );
-        }
-
         $data = [
-            'name'=>$request->name,
-            'email'=>$request->email,
-            'date_of_birth'=>$request->date_of_birth,
-            'password'=> Hash::make($request->password),
+            'name' => $request->name,
+            'email' => $request->email,
+            'date_of_birth' => $request->date_of_birth,
+            'password' => Hash::make($request->password),
         ];
 
         User::create($data);
@@ -107,7 +90,7 @@ class UserController extends Controller
         return response()->json($payload, Response::HTTP_OK);
     }
 
-    public function update(Request $request, $id)
+    public function update(UserUpdateRequest $request, $id)
     {
 
         $user = User::find($id);
@@ -120,24 +103,6 @@ class UserController extends Controller
             ];
 
             return response()->json($payload, Response::HTTP_NOT_FOUND);
-        }
-
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email,' . $id,
-            'date_of_birth' => 'required|date',
-        ]);
-
-        if ($validator->fails()) {
-            return response(
-                [
-                    'status' => Response::HTTP_UNPROCESSABLE_ENTITY,
-                    'app_message' => 'Validation errors',
-                    'user_message' => 'Validation errors',
-                    'errors' => $validator->errors(),
-                ],
-                Response::HTTP_UNPROCESSABLE_ENTITY
-            );
         }
 
         $user->update($request->all());
@@ -176,5 +141,15 @@ class UserController extends Controller
         ];
 
         return response()->json($payload, Response::HTTP_OK);
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        return response([
+            'status' => Response::HTTP_UNPROCESSABLE_ENTITY,
+            'app_message' => 'Validation errors',
+            'user_message' => 'Validation errors',
+            'errors' => $validator->errors(),
+        ], Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 }
