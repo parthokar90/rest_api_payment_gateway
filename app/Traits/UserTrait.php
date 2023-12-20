@@ -11,8 +11,7 @@ trait UserTrait{
         if (!$user) {
             $payload = [
                 'status' => Response::HTTP_NOT_FOUND,
-                'app_message' => 'User not found',
-                'user_message' => 'User not found',
+                'message' => 'User not found',
             ];
 
             return response()->json($payload, Response::HTTP_NOT_FOUND);

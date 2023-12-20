@@ -3,15 +3,23 @@
 namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
+
 use App\Http\Resources\UserResource;
+
 use App\Http\Requests\UserCreateRequest;
+
 use App\Http\Requests\UserUpdateRequest;
+
 use App\Traits\UserTrait;
+
 use App\Models\User;
+
 use Illuminate\Http\Request;
+
 use Illuminate\Http\Response;
+
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
+
 
 class UserController extends Controller
 {
@@ -64,8 +72,7 @@ class UserController extends Controller
 
         $payload = [
             'status' => Response::HTTP_CREATED,
-            'app_message' => 'User has been save successfully',
-            'user_message' => 'User has been save successfully',
+            'message' => 'User has been save successfully',
         ];
 
         return response()->json($payload, Response::HTTP_CREATED);
@@ -101,8 +108,7 @@ class UserController extends Controller
 
         $payload = [
             'status' => Response::HTTP_OK,
-            'app_message' => 'User has been updated',
-            'user_message' => 'Success',
+            'message' => 'User has been updated',
             'data' => new UserResource($user)
         ];
 
@@ -122,8 +128,7 @@ class UserController extends Controller
 
         $payload = [
             'status' => Response::HTTP_OK,
-            'app_message' => 'User has been deleted',
-            'user_message' => 'User has been deleted',
+            'message' => 'User has been deleted',
         ];
 
         return response()->json($payload, Response::HTTP_OK);
