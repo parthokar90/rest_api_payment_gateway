@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Http\Requests\UserCreateRequest;
 use App\Http\Requests\UserUpdateRequest;
+use App\Traits\UserTrait;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -14,6 +15,9 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
+
+    use UserTrait;
+
     public function index(Request $request)
     {
 
@@ -73,13 +77,7 @@ class UserController extends Controller
         $user = User::find($id);
 
         if (!$user) {
-            $payload = [
-                'status' => Response::HTTP_NOT_FOUND,
-                'app_message' => 'User not found',
-                'user_message' => 'User not found',
-            ];
-
-            return response()->json($payload, Response::HTTP_NOT_FOUND);
+           return $this->notFound($user);
         }
 
         $payload = [
@@ -96,14 +94,8 @@ class UserController extends Controller
         $user = User::find($id);
 
         if (!$user) {
-            $payload = [
-                'status' => Response::HTTP_NOT_FOUND,
-                'app_message' => 'User not found',
-                'user_message' => 'User not found',
-            ];
-
-            return response()->json($payload, Response::HTTP_NOT_FOUND);
-        }
+            return $this->notFound($user);
+         }
 
         $user->update($request->all());
 
@@ -123,14 +115,8 @@ class UserController extends Controller
         $user = User::find($id);
 
         if (!$user) {
-            $payload = [
-                'status' => Response::HTTP_NOT_FOUND,
-                'app_message' => 'User not found',
-                'user_message' => 'User not found',
-            ];
-
-            return response()->json($payload, Response::HTTP_NOT_FOUND);
-        }
+            return $this->notFound($user);
+         }
 
         $user->delete();
 
@@ -141,15 +127,5 @@ class UserController extends Controller
         ];
 
         return response()->json($payload, Response::HTTP_OK);
-    }
-
-    protected function failedValidation(Validator $validator)
-    {
-        return response([
-            'status' => Response::HTTP_UNPROCESSABLE_ENTITY,
-            'app_message' => 'Validation errors',
-            'user_message' => 'Validation errors',
-            'errors' => $validator->errors(),
-        ], Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 }
