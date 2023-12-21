@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Backend\Payment\PaymentController;
-use App\Http\Controllers\Backend\AuthController;
+
 
 /*
 |--------------------------------------------------------------------------
