@@ -31,7 +31,6 @@ class UserCreateRequest extends FormRequest
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'date_of_birth' => 'required|date_format:Y-m-d',
-            'password' => 'required',
         ];
     }
 

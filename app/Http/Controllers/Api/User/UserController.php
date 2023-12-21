@@ -65,14 +65,14 @@ class UserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'date_of_birth' => $request->date_of_birth,
-            'password' => Hash::make($request->password),
+            'password' => Hash::make(12345678),
         ];
 
         User::create($data);
 
         $payload = [
             'status' => Response::HTTP_CREATED,
-            'message' => 'User has been save successfully',
+            'message' => 'User has been created successfully',
         ];
 
         return response()->json($payload, Response::HTTP_CREATED);
